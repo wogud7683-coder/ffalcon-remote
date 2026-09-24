@@ -21,6 +21,27 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/SebghatYusuf/android_remote.git app
 
+      - name: Add power button
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path("app/lib/src/ui/tv_remote_screen.dart")
+          s = p.read_text()
+
+          old = """              children: [
+                _Btn(icon: Icons.home_rounded,       label: 'HOME',  onTap: () => n.sendKeyPress(3)),"""
+
+          new = """              children: [
+                _Btn(icon: Icons.power_settings_new_rounded, label: 'POWER', onTap: () => n.sendKeyPress(26)),
+                _Btn(icon: Icons.home_rounded,       label: 'HOME',  onTap: () => n.sendKeyPress(3)),"""
+
+          if old not in s:
+              raise SystemExit("Could not find SYSTEM button block to patch")
+
+          p.write_text(s.replace(old, new, 1))
+          PY
+
       - name: Update Gradle
         run: |
           sed -i 's/gradle-8.13-bin.zip/gradle-8.14-bin.zip/' app/android/gradle/wrapper/gradle-wrapper.properties
@@ -35,11 +56,11 @@ jobs:
 
       - name: Rename APK
         run: |
-          cp app/build/app/outputs/flutter-apk/app-release.apk FFALCON_Remote_FF32S55.apk
+          cp app/build/app/outputs/flutter-apk/app-release.apk FFALCON_Remote_FF32S55_Power.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FFALCON-Remote-APK
-          path: FFALCON_Remote_FF32S55.apk
+          name: FFALCON-Remote-APK-Power
+          path: FFALCON_Remote_FF32S55_Power.apk
           if-no-files-found: error
