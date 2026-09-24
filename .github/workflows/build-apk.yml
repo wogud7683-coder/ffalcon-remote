@@ -11,23 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout files
-        uses: actions/checkout@v4
-
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
 
-      - name: Create Android project
+      - name: Download Android TV Remote source
         run: |
-          flutter create --platforms=android --project-name ffalcon_remote app
-          cp pubspec.yaml app/pubspec.yaml
-          cp main.dart app/lib/main.dart
-          cp AndroidManifest.xml app/android/app/src/main/AndroidManifest.xml
+          git clone --depth 1 https://github.com/SebghatYusuf/android_remote.git app
 
-      - name: Download dependencies
+      - name: Install dependencies
         working-directory: app
         run: flutter pub get
 
