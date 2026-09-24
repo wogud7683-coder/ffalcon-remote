@@ -29,17 +29,15 @@ jobs:
           p = Path("app/lib/src/ui/tv_remote_screen.dart")
           s = p.read_text()
 
-          old = """              children: [
-                _Btn(icon: Icons.home_rounded,       label: 'HOME',  onTap: () => n.sendKeyPress(3)),"""
+          needle = "_Btn(icon: Icons.home_rounded,       label: 'HOME',  onTap: () => n.sendKeyPress(3)),"
 
-          new = """              children: [
-                _Btn(icon: Icons.power_settings_new_rounded, label: 'POWER', onTap: () => n.sendKeyPress(26)),
-                _Btn(icon: Icons.home_rounded,       label: 'HOME',  onTap: () => n.sendKeyPress(3)),"""
+          replacement = """_Btn(icon: Icons.power_settings_new_rounded, label: 'POWER', onTap: () => n.sendKeyPress(26)),
+                """ + needle
 
-          if old not in s:
-              raise SystemExit("Could not find SYSTEM button block to patch")
+          if needle not in s:
+              raise SystemExit("HOME button not found")
 
-          p.write_text(s.replace(old, new, 1))
+          p.write_text(s.replace(needle, replacement, 1))
           PY
 
       - name: Update Gradle
