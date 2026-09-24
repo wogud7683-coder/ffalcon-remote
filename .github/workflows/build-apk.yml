@@ -21,6 +21,10 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/SebghatYusuf/android_remote.git app
 
+      - name: Update Gradle
+        run: |
+          sed -i 's/gradle-8.13-bin.zip/gradle-8.14-bin.zip/' app/android/gradle/wrapper/gradle-wrapper.properties
+
       - name: Install dependencies
         working-directory: app
         run: flutter pub get
